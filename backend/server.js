@@ -8,6 +8,8 @@ import connectToMongoDb from "./DB/connectToMongoDB.js";
 import authRouter from './routes/auth/auth-routes.js'
 import adminRouter from './routes/admin/products-routes.js'
 
+import shopProductsRouter from './routes/shop/products-routes.js'
+
 import AdminOrderRouter from './routes/admin/order-routes.js'
 
 dotenv.config();
@@ -35,6 +37,7 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
 app.use('/api/admin/products', adminRouter);
+app.use("/api/shop/products", shopProductsRouter)
 app.use("/api/admin/orders", AdminOrderRouter)
 
 app.get("/", (req, res) => {
