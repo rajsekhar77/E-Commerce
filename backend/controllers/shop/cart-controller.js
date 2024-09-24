@@ -184,3 +184,56 @@ export const updateCartItemQty = async (req, res) => {
     });
   }
 };
+
+export const deleteCartItem = async (req, res) => {
+  try {
+    const { userId, productId } = req.params;
+
+    if (!userId || !productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid data Provided!",
+      });
+    }
+
+    const cart = await Cart.findOne({ userId }).populate({
+      path: "items.productId",
+      select: "image title price salePrice",
+    });
+
+    if (!cart) {
+      res.status(404).json({
+        success: false,
+        message: "Cart not found!",
+      });
+    }
+
+    cart.items = cart.items.filter((item) => {
+      return item.productId._id.toString() !== productId;
+    });
+
+    await cart.save();
+
+    const populateCartItems = cart.items.map((item) => {
+      return {
+        productId: item.productId ? item.productId._id : null,
+        image: item.productId ? item.productId.image : null,
+        title: item.productId ? item.productId.title : "Product not found",
+        price: item.productId ? item.productId.price : null,
+        salePrice: item.productId ? item.productId.salePrice : null,
+        quantity: item.quantity,
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      data: { ...cart._doc, items: populateCartItems },
+    });
+  } catch (error) {
+    console.log("Error in deletecartitem controller", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Some Error Occured",
+    });
+  }
+};
