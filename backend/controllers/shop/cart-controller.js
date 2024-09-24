@@ -54,3 +54,69 @@ export const addToCart = async (req, res) => {
     res.status(500).json({ success: false, message: "Some Error Occured" });
   }
 };
+
+export const fetchCartItems = async (req, res) => {
+    try {
+      const { userId } = req.params;
+  
+      if (!userId) {
+        return res.status(400).json({
+          success: false,
+          message: "User id is mandatory!",
+        });
+      }
+  
+      const cart = await Cart.findOne({ userId }).populate({
+        path: "items.productId",
+        select: "image title price salePrice",
+      });
+  
+      if (!cart) {
+        return res.status(404).json({
+          success: false,
+          message: "Cart not found!",
+        });
+      }
+  
+      const validItems = cart.items.filter((productItem) => {
+        return productItem.productId;
+      });
+  
+      if (validItems.length < cart.items.length) {
+        cart.items = validItems;
+        await cart.save();
+      }
+  
+      const populateCartItems = validItems.map((item) => {
+        return {
+          productId: item.productId._id,
+          image: item.productId.image,
+          title: item.productId.title,
+          price: item.productId.price,
+          salePrice: item.productId.salePrice,
+          quantity: item.quantity,
+        };
+      });
+  
+      // sending current userId cart document and his cart items and how it likes for data
+      // let data = {
+      //   userId: '12345',
+      //   items: [{productId : '123456543', quantity: 2}, {productId: '87754', quantity:4}],
+      //   items: {
+      //     productId: '123',
+      //     image: 'url',
+      //     title: 'title',
+      //     price: 'price',
+      //     salePrice: 'salePrice',
+      //     quantity: 'quntity',
+      //   }
+      // }
+      res.status(200).json({
+        success: true,
+        data: { ...cart._doc, items: populateCartItems },
+      });
+    } catch (error) {
+      console.log("Error in fetchcartitems controller", error.message);
+      res.status(500).json({ success: false, message: "Some Error Occured" });
+    }
+  };
