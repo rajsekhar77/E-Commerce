@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ShoppingProductTile from "./product-tile";
 import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
+import { addToCart, fetchCartItems } from "@/features/shop/cart/cart-slice";
 import { useToast } from "@/hooks/use-toast";
 
 function createSearchParamsHelper(filterParams) {
@@ -40,6 +41,10 @@ function ShoppingListing() {
 
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
+  );
+
+  const { cartItems } = useSelector(
+    (state) => state.shopCart
   );
 
   const { user } = useSelector((state) => state.auth);
@@ -82,6 +87,40 @@ function ShoppingListing() {
 
   function handleGetProductDetails(getCurrentProductId) {
     dispatch(fetchProductDetails(getCurrentProductId));
+  }
+
+  function handleAddToCart(getCurrentProductId, getTotalStock) {
+    let getCartItems = cartItems.items || [];
+
+    if(getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(item=> (item.productId === getCurrentProductId))
+      
+      if(indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity
+
+        if(getQuantity + 1 > getTotalStock){
+          toast({
+            title: `Only ${getQuantity} quantity can be added for this item`,
+            variant: 'destructive'
+          })
+          return;
+        } 
+      }
+    }
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      if (data.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: "Product is added to cart",
+        });
+      }
+    });
   }
 
   useEffect(() => {
@@ -162,6 +201,7 @@ function ShoppingListing() {
                     <ShoppingProductTile
                       product={product}
                       handleGetProductDetails={handleGetProductDetails}
+                      handleAddToCart={handleAddToCart}
                     />
                   </Fragment>
                 );

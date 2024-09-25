@@ -7,6 +7,7 @@ import React from "react";
 function ShoppingProductTile({
   product,
   handleGetProductDetails,
+  handleAddToCart,
 }) {
   return (
     <Card className="w-full max-w-sm mx-auto">
@@ -72,6 +73,7 @@ function ShoppingProductTile({
           </Button>
         ) : (
           <Button
+            onClick={() => handleAddToCart(product?._id, product?.totalStock)}
             className="w-full"
           >
             Add to cart
