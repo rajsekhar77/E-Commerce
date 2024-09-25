@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import bannerOne from "../../assets/banner-1.webp";
 import bannerTwo from "../../assets/banner-2.webp";
 import bannerThree from "../../assets/banner-3.webp";
-// import bannerFour from "../../assets/banner-4.webp";
 import bannerFour from "../../assets/banner-4.webp";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +27,8 @@ import {
 } from "@/features/shop/products/products-slice";
 import ShoppingProductTile from "./product-tile";
 import { useNavigate } from "react-router-dom";
+import { addToCart, fetchCartItems } from "@/features/shop/cart/cart-slice";
+import { useToast } from "@/hooks/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
 
 const categoryWithIcon = [
@@ -53,10 +54,13 @@ function ShoppingHome() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+
+  const { user } = useSelector((state) => state.auth);
 
   const slides = [bannerOne, bannerTwo, bannerThree, bannerFour];
 
@@ -73,7 +77,25 @@ function ShoppingHome() {
   function handleGetProductDetails(getCurrentProductId) {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
-  
+
+  function handleAddToCart(getCurrentProductId) {
+    // console.log(getCurrentProductId);
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      if (data.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: "Product is added to cart",
+        });
+      }
+    });
+  }
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prevSlide) => {
@@ -121,10 +143,7 @@ function ShoppingHome() {
           className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
           onClick={() =>
             setCurrentSlide((prevSlide) => {
-              return (
-                (prevSlide - 1 + slides.length) %
-                slides.length
-              );
+              return (prevSlide - 1 + slides.length) % slides.length;
             })
           }
         >
@@ -207,6 +226,7 @@ function ShoppingHome() {
                     <ShoppingProductTile
                       product={productItem}
                       handleGetProductDetails={handleGetProductDetails}
+                      handleAddToCart={handleAddToCart}
                     />
                   );
                 })
