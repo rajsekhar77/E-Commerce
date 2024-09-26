@@ -94,3 +94,57 @@ export const createOrder = async (req, res) => {
     });
   }
 };
+
+export const capturePayment = async (req, res) => {
+  try {
+    const { payerId, paymentId, orderId } = req.body;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order can not be found",
+      });
+    }
+
+    order.paymentStatus = "paid";
+    order.orderStatus = "confirmed";
+    order.paymentId = paymentId;
+    order.payerId = payerId;
+
+    // it is for udpating the stock quantity after buying the product from cart by the user
+    for (let item of order.cartItems) {
+      let product = await Product.findById(item.productId);
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `not enough stock for this product ${product.title}`,
+        });
+      }
+
+      product.totalStock -= item.quantity;
+
+      await product.save();
+    }
+
+    // this is for deleting the cart items in the database
+    const getCartId = order.cartId;
+    await Cart.findByIdAndDelete(getCartId);
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      meessage: "Order Confirmed",
+      data: order,
+    });
+  } catch (error) {
+    console.log("Error in capturePayment controller: ", error.message);
+    res.stats(500).json({
+      success: false,
+      message: "Error",
+    });
+  }
+};
