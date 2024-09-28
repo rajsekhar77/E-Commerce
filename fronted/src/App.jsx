@@ -24,6 +24,10 @@ import { checkAuth } from "./features/auth/authSlice";
 
 import CheckAuth from "./components/commonComponents/CheckAuth";
 import { Skeleton } from "./components/ui/skeleton";
+
+import PaypalReturnPage from "./pages/shopping-view/paypal-return";
+import PaymentSuccessPage from "./pages/shopping-view/payment-success";
+
 import UnAuthPage from "./pages/unauth-page";
 
 function App() {
@@ -94,6 +98,8 @@ function App() {
           <Route path="listing" element={<ShoppingListing />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="account" element={<ShoppingAccount />} />
+          <Route path="paypal-return" element={<PaypalReturnPage />} />
+          <Route path="payment-success" element={<PaymentSuccessPage />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
