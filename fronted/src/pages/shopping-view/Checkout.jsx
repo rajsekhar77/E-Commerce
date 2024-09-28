@@ -4,11 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import UserCartItemsContent from "@/components/shopping-view/cart-content";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { createNewOrder } from "@/features/shop/order/order-slice";
+import { useToast } from "@/hooks/use-toast";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
+  const { user } = useSelector((state) => state.auth);
+  const { approvalURL } = useSelector((state) => state.shopOrder);
+  const { toast } = useToast();
 
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
+  const [isPaymentStart, SetIsPaymentStart] = useState(false);
+
+  const dispatch = useDispatch();
 
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0
@@ -22,6 +30,68 @@ function ShoppingCheckout() {
           );
         }, 0)
       : 0;
+
+  function handleInitialPaypalPayment() {
+    if (cartItems.length === 0) {
+      toast({
+        title: "Your Cart is empty. Please add items to proceed",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (currentSelectedAddress === null) {
+      toast({
+        title: "Please Select Address to proceed!",
+        variant: "destructive",
+      });
+      return;
+    }
+    const orderData = {
+      userId: user?.id,
+      cartId: cartItems?._id,
+      cartItems: cartItems.items.map((singleCartItem) => {
+        return {
+          productId: singleCartItem?.productId,
+          title: singleCartItem?.title,
+          image: singleCartItem?.image,
+          price:
+            singleCartItem?.salePrice > 0
+              ? singleCartItem?.salePrice
+              : singleCartItem?.price,
+          quantity: singleCartItem?.quantity,
+        };
+      }),
+      addressInfo: {
+        addressId: currentSelectedAddress?._id,
+        address: currentSelectedAddress?.address,
+        city: currentSelectedAddress?.city,
+        pincode: currentSelectedAddress?.pincode,
+        phone: currentSelectedAddress?.phone,
+        notes: currentSelectedAddress?.notes,
+      },
+      orderStatus: "pending",
+      paymentMethod: "paypal",
+      paymentStatus: "pending",
+      totalAmount: totalCartAmount,
+      orderDate: new Date(),
+      orderUpdateDate: new Date(),
+      paymentId: "",
+      payerId: "",
+    };
+    // console.log(orderData, 'order');
+    dispatch(createNewOrder(orderData)).then((data) => {
+      if (data?.payload?.success) {
+        console.log(data, "data");
+        SetIsPaymentStart(true);
+      } else {
+        SetIsPaymentStart(false);
+      }
+    });
+  }
+
+  if (approvalURL) {
+    window.location.href = approvalURL;
+  }
 
   return (
     <div className="flex flex-col">
@@ -46,7 +116,11 @@ function ShoppingCheckout() {
             </div>
           </div>
           <div className="mt-4">
-            <Button className="w-full">Checkout with Paypal</Button>
+            <Button onClick={handleInitialPaypalPayment} className="w-full">
+              {isPaymentStart
+                ? "Processing Paypal please wait..."
+                : "Checkout with Paypal"}
+            </Button>{" "}
           </div>
         </div>
       </div>
