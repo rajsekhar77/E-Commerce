@@ -14,19 +14,32 @@ import AdminOrderDetailsView from "./order-details";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllOrdersForAdmin,
+  getOrderDetailsForAdmin,
   resetOrderDetails,
 } from "@/features/admin/orders/order-slice";
 import { Badge } from "../ui/badge";
 
 function AdminOrder() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const { orderList } = useSelector((state) => state.adminOrder);
+  const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
 
   const dispatch = useDispatch();
+
+  function handleFetchOrderDetails(getId) {
+    dispatch(getOrderDetailsForAdmin(getId));
+  }
 
   useEffect(() => {
     dispatch(getAllOrdersForAdmin());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (orderDetails !== null) {
+      setOpenDetailsDialog(true);
+    }
+  }, [orderDetails]);
+
+  console.log(orderDetails, "orders");
 
   console.log(orderList.length, "lenght");
   return (
@@ -78,8 +91,14 @@ function AdminOrder() {
                             dispatch(resetOrderDetails());
                           }}
                         >
-                          <Button>View Details</Button>
-                          <AdminOrderDetailsView />
+                          <Button
+                            onClick={() =>
+                              handleFetchOrderDetails(orderItem?._id)
+                            }
+                          >
+                            View Details
+                          </Button>
+                          <AdminOrderDetailsView orderDetails={orderDetails} />
                         </Dialog>
                       </TableCell>
                     </TableRow>
