@@ -12,6 +12,7 @@ import shopProductsRouter from './routes/shop/products-routes.js'
 import shopCartRouter from './routes/shop/cart-routes.js'
 import shopAddressRouter from './routes/shop/address-routes.js'
 import shopOrderRouter from './routes/shop/order-routes.js'
+import shopReviewRouter from './routes/shop/review-routes.js'
 
 import AdminOrderRouter from './routes/admin/order-routes.js'
 
@@ -44,6 +45,7 @@ app.use("/api/shop/products", shopProductsRouter)
 app.use("/api/shop/cart", shopCartRouter)
 app.use("/api/shop/address", shopAddressRouter)
 app.use("/api/shop/order", shopOrderRouter)
+app.use("/api/shop/reviews", shopReviewRouter)
 app.use("/api/admin/orders", AdminOrderRouter)
 
 app.get("/", (req, res) => {
