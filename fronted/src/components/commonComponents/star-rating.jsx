@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { StarIcon } from "lucide-react";
 
-function StarRatingComponent({ rating }) {
+function StarRatingComponent({ rating, handleRatingChange }) {
   return [1, 2, 3, 4, 5].map((star) => {
     return (
       <Button
@@ -13,6 +13,7 @@ function StarRatingComponent({ rating }) {
         }`}
         variant="outline"
         size="icon"
+        onClick={handleRatingChange ? () => handleRatingChange(star) : null}
       >
         <StarIcon
           className={`w-6 h-6 ${
