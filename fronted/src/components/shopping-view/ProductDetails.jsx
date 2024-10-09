@@ -94,6 +94,13 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         toast({
           title: "Review added successfully",
         });
+      } else {
+        setRating(0);
+        setReviewMsg("");
+        toast({
+          title: 'review already is created',
+          variant: 'destructive'
+        })
       }
     });
   }
