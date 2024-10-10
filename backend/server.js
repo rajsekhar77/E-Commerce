@@ -17,6 +17,8 @@ import shopSearchRouter from './routes/shop/search-routes.js'
 
 import AdminOrderRouter from './routes/admin/order-routes.js'
 
+import commonFeatureRouter from './routes/common/feature-routes.js'
+
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
@@ -49,6 +51,7 @@ app.use("/api/shop/order", shopOrderRouter)
 app.use("/api/shop/reviews", shopReviewRouter)
 app.use("/api/shop/search", shopSearchRouter)
 app.use("/api/admin/orders", AdminOrderRouter)
+app.use("/api/common/feature", commonFeatureRouter)
 
 app.get("/", (req, res) => {
   res.send({ name: "raju" });
