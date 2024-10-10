@@ -8,6 +8,7 @@ import shopOrderSlice from "../features/shop/order/order-slice.js";
 import adminOrderSlice from "../features/admin/orders/order-slice.js";
 import shopReviewSlice from "../features/shop/review/review-slice.js";
 import shopSearchSlice from "../features/shop/search/search-slice.js";
+import commonFeatureSlice from "../features/common/common-slice.js";
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     adminOrder: adminOrderSlice,
     shopReview: shopReviewSlice,
     shopSearch: shopSearchSlice,
+    commonFeature: commonFeatureSlice,
   },
 });
 
