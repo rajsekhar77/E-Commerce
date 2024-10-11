@@ -30,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/features/shop/cart/cart-slice";
 import { useToast } from "@/hooks/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/ProductDetails";
+import { getFeatureImages } from "@/features/common/common-slice";
 
 const categoryWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -55,6 +56,8 @@ function ShoppingHome() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const { featureImageList } = useSelector((state) => state.commonFeature);
 
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
@@ -99,12 +102,12 @@ function ShoppingHome() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prevSlide) => {
-        return (prevSlide + 1) % slides.length;
+        return (prevSlide + 1) % featureImageList.length;
       });
     }, 3000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [featureImageList]);
 
   useEffect(() => {
     dispatch(
@@ -121,14 +124,20 @@ function ShoppingHome() {
     }
   }, [productDetails]);
 
+  useEffect(() => {
+    dispatch(getFeatureImages());
+  }, [dispatch]);
+
+  console.log(featureImageList, "featureImageList");
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative w-full h-[600px] overflow-hidden">
-        {slides && slides.length > 0
-          ? slides.map((slide, index) => {
+        {featureImageList && featureImageList.length > 0
+          ? featureImageList.map((slide, index) => {
               return (
                 <img
-                  src={slide}
+                  src={slide?.image}
                   key={index}
                   className={`${
                     index === currentSlide ? "opacity-100" : "opacity-0"
@@ -143,7 +152,10 @@ function ShoppingHome() {
           className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
           onClick={() =>
             setCurrentSlide((prevSlide) => {
-              return (prevSlide - 1 + slides.length) % slides.length;
+              return (
+                (prevSlide - 1 + featureImageList.length) %
+                featureImageList.length
+              );
             })
           }
         >
@@ -155,7 +167,7 @@ function ShoppingHome() {
           className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
           onClick={() =>
             setCurrentSlide((prevSlide) => {
-              return (prevSlide + 1) % slides.length;
+              return (prevSlide + 1) % featureImageList.length;
             })
           }
         >

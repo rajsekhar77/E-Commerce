@@ -98,9 +98,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         setRating(0);
         setReviewMsg("");
         toast({
-          title: 'review already is created',
-          variant: 'destructive'
-        })
+          title: "review already is created",
+          variant: "destructive",
+        });
       }
     });
   }
