@@ -19,7 +19,7 @@ function ProductImageUpload({
   const inputRef = useRef(null);
 
   function handleImageFileChange(event) {
-    console.log(event.target.files);
+    // console.log(event.target.files);
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
@@ -54,7 +54,7 @@ function ProductImageUpload({
       "http://localhost:3000/api/admin/products/upload-image",
       data
     );
-    console.log(response);
+    // console.log(response);
     if (response.data?.success) {
       setUploadedImageUrl(response.data.result.url);
       setImageLoadingState(false);

@@ -56,7 +56,7 @@ function AdminProducts() {
           formData,
         })
       ).then((data) => {
-        console.log(data, "editproduct");
+        // console.log(data, "editproduct");
         if (data?.payload?.success) {
           dispatch(fetchAllProducts());
           setOpenCreateProdutsDialog(false);
@@ -75,7 +75,7 @@ function AdminProducts() {
           image: uploadedImageUrl,
         })
       ).then((data) => {
-        console.log(data, "in adminproducts");
+        // console.log(data, "in adminproducts");
         if (data?.payload?.success) {
           dispatch(fetchAllProducts());
           setOpenCreateProdutsDialog(false);

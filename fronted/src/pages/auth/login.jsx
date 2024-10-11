@@ -31,7 +31,7 @@ function AuthLogin() {
           variant: "destructive",
         });
       }
-      console.log(data);
+      // console.log(data);
     });
   }
 

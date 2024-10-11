@@ -27,12 +27,12 @@ function createSearchParamsHelper(filterParams) {
   for (const [key, value] of Object.entries(filterParams)) {
     if (Array.isArray(value) && value.length > 0) {
       const paramValue = value.join(",");
-      console.log(paramValue);
+      // console.log(paramValue);
 
       queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
     }
   }
-  console.log(queryParams);
+  // console.log(queryParams);
   return queryParams.join("&");
 }
 
@@ -65,7 +65,7 @@ function ShoppingListing() {
   }
 
   function handleFilter(getSectionId, getCurrentOption) {
-    console.log(getSectionId, getCurrentOption);
+    // console.log(getSectionId, getCurrentOption);
     let cpyFilters = { ...filters };
     const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
 
@@ -150,7 +150,7 @@ function ShoppingListing() {
     }
   }, [productDetails]);
 
-  console.log(productList, 'productlist');
+  // console.log(productList, 'productlist');
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">

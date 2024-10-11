@@ -39,9 +39,9 @@ function AdminOrder() {
     }
   }, [orderDetails]);
 
-  console.log(orderDetails, "orders");
+  // console.log(orderDetails, "orders");
 
-  console.log(orderList.length, "lenght");
+  // console.log(orderList.length, "lenght");
   return (
     <Card>
       <CardHeader>

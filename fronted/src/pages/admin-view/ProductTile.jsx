@@ -9,7 +9,7 @@ function ProductTile({
   setFormData,
   handleDelete,
 }) {
-  console.log("prodcut tile", product);
+  // console.log("prodcut tile", product);
   return (
     <Card className="w-full max-w-sm mx-auto">
       <div>

@@ -128,7 +128,7 @@ function ShoppingHome() {
     dispatch(getFeatureImages());
   }, [dispatch]);
 
-  console.log(featureImageList, "featureImageList");
+  // console.log(featureImageList, "featureImageList");
 
   return (
     <div className="flex flex-col min-h-screen">

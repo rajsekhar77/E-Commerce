@@ -33,7 +33,7 @@ function AuthRegister() {
           variant: "destructive",
         });
       }
-      console.log(data);
+      // console.log(data);
     });
   }
 

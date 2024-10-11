@@ -110,7 +110,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
     dispatch(fetchAllAddresses(user?.id));
   }, [dispatch]);
 
-  console.log(addressList, "address");
+  // console.log(addressList, "address");
   return (
     <Card>
       <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
