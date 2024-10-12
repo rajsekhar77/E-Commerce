@@ -10,7 +10,7 @@ export const addNewProduct = createAsyncThunk(
   "/products/addnewproduct",
   async (formData) => {
     const result = await axios.post(
-      "http://localhost:3000/api/admin/products/add",
+      `${import.meta.env.VITE_API_URL}/api/admin/products/add`,
       formData,
       {
         headers: { "Content-Type": "application/json" },
@@ -24,7 +24,7 @@ export const fetchAllProducts = createAsyncThunk(
   "/products/fetchallproducts",
   async () => {
     const result = await axios.get(
-      "http://localhost:3000/api/admin/products/get"
+      `${import.meta.env.VITE_API_URL}/api/admin/products/get`
     );
     return result?.data;
   }
@@ -34,7 +34,7 @@ export const editProduct = createAsyncThunk(
   "/products/editproduct",
   async ({ id, formData }) => {
     const result = await axios.put(
-      `http://localhost:3000/api/admin/products/edit/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/admin/products/edit/${id}`,
       formData,
       {
         headers: { "Content-Type": "application/json" },
@@ -47,7 +47,7 @@ export const deleteProduct = createAsyncThunk(
   "/products/deleteProduct",
   async (id) => {
     const result = await axios.delete(
-      `http://localhost:3000/api/admin/products/delete/${id}`
+      `${import.meta.env.VITE_API_URL}/api/admin/products/delete/${id}`
     );
     return result?.data;
   }
