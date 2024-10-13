@@ -18,7 +18,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ProductTile from "./productTile";
+import ProductTile from "./ProductTile";
 
 const initialFormData = {
   image: null,
