@@ -70,9 +70,21 @@ export const login = async (req, res) => {
       { expiresIn: "60m" }
     );
 
-    res.cookie("token", token, { httpOnly: true, secure: false }).json({
+    // res.cookie("token", token, { httpOnly: true, secure: true }).json({
+    //   success: true,
+    //   message: "login successful",
+    //   user: {
+    //     email: checkUser.email,
+    //     role: checkUser.role,
+    //     id: checkUser._id,
+    //     userName: checkUser.userName,
+    //   },
+    // });
+
+    res.status(200).json({
       success: true,
-      message: "login successful",
+      message: "Logged in succesfull",
+      token,
       user: {
         email: checkUser.email,
         role: checkUser.role,
@@ -81,7 +93,7 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log('Error in login controller', error);
+    console.log("Error in login controller", error);
     res.status(500).json({
       success: false,
       message: "some error occured",
@@ -90,14 +102,37 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  res.clearCookie('token').json({
+  res.clearCookie("token").json({
     success: true,
-    message: 'Logged out successfully '
-  })
-}
+    message: "Logged out successfully ",
+  });
+};
+
+// export const middleware = async(req, res, next) => {
+//   const token = req.cookies.token;
+//   if(!token) {
+//     return res.status(401).json({
+//       success: false,
+//       message: 'Unauthorized user'
+//     })
+//   }
+
+//   try {
+//     const decoded = jwt.verify(token, "clientsecretkey");
+//     req.user = decoded;
+//     next();
+//   } catch (error) {
+//     console.log('error in middleware', error.message);
+//     res.status(401).json({
+//       success: false,
+//       message: 'Unauthorized user'
+//     })
+//   }
+// }
 
 export const middleware = async(req, res, next) => {
-  const token = req.cookies.token;
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]
   if(!token) {
     return res.status(401).json({
       success: false,
@@ -108,7 +143,7 @@ export const middleware = async(req, res, next) => {
   try {
     const decoded = jwt.verify(token, "clientsecretkey");
     req.user = decoded;
-    next(); 
+    next();
   } catch (error) {
     console.log('error in middleware', error.message);
     res.status(401).json({
