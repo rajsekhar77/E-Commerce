@@ -18,9 +18,9 @@ function AdminDashboard() {
   function handleUploadFeatureImage() {
     dispatch(addFeatureImage(uploadedImageUrl)).then((data) => {
       if (data?.payload?.success) {
-        dispatch(getFeatureImages())
-        setImageFile(null)
-        setUploadedImageUrl('')
+        dispatch(getFeatureImages());
+        setImageFile(null);
+        setUploadedImageUrl("");
       }
     });
   }
@@ -46,14 +46,14 @@ function AdminDashboard() {
       </Button>
       <div className="flex flex-col gap-4 mt-5">
         {featureImageList && featureImageList.length > 0
-          ? featureImageList.map((item) => {
+          ? featureImageList.map((item, index) => {
               return (
-                <div className="relative">
-                <img
-                  src={item?.image}
-                  className="w-full h-[300px] object-cover rounded-lg"
-                />
-              </div>
+                <div className="relative" key={index}>
+                  <img
+                    src={item?.image}
+                    className="w-full h-[300px] object-cover rounded-lg"
+                  />
+                </div>
               );
             })
           : null}

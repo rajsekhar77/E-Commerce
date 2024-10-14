@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DialogContent } from "../ui/dialog";
+import { DialogContent, DialogDescription, DialogTitle } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import Commonform from "../commonComponents/form";
@@ -86,9 +86,12 @@ function AdminOrderDetailsView({ orderDetails }) {
             <div className="font-medium">Order Details</div>
             <ul className="grid gap-3">
               {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
-                ? orderDetails?.cartItems.map((cartItem) => {
+                ? orderDetails?.cartItems.map((cartItem, index) => {
                     return (
-                      <li className="flex items-center justify-between">
+                      <li
+                        className="flex items-center justify-between"
+                        key={index}
+                      >
                         <span>{cartItem.title}</span>
                         <span>{cartItem?.price}</span>
                       </li>

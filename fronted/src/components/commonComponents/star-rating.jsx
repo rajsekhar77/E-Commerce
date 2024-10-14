@@ -3,9 +3,10 @@ import { Button } from "../ui/button";
 import { StarIcon } from "lucide-react";
 
 function StarRatingComponent({ rating, handleRatingChange }) {
-  return [1, 2, 3, 4, 5].map((star) => {
+  return [1, 2, 3, 4, 5].map((star, index) => {
     return (
       <Button
+        key={index}
         className={`p-2 rounded-full transition-colors ${
           star <= rating
             ? "text-yellow-500 hover:bg-black"
