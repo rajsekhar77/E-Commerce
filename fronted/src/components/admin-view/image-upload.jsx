@@ -5,6 +5,7 @@ import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import axios from "axios";
 import { Skeleton } from "../ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 function ProductImageUpload({
   file,
@@ -15,8 +16,10 @@ function ProductImageUpload({
   setImageLoadingState,
   isEditMode,
   isCustomStyling = false,
+  triggerUpload,
 }) {
   const inputRef = useRef(null);
+  const { toast } = useToast();
 
   function handleImageFileChange(event) {
     // console.log(event.target.files);
@@ -47,6 +50,9 @@ function ProductImageUpload({
   }
 
   async function uploadImageToCloudinary() {
+    if (!file) {
+      return;
+    }
     setImageLoadingState(true);
     const data = new FormData();
     data.append("my_file", file);
@@ -56,8 +62,12 @@ function ProductImageUpload({
     );
     // console.log(response);
     if (response.data?.success) {
+      console.log(response.data.result.url);
       setUploadedImageUrl(response.data.result.url);
       setImageLoadingState(false);
+      toast({
+        title: "Image upload succesfully",
+      });
     }
   }
 
@@ -65,7 +75,7 @@ function ProductImageUpload({
     if (file !== null) {
       uploadImageToCloudinary();
     }
-  }, [file]);
+  }, [triggerUpload]);
 
   return (
     <div className={`w-full mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}>

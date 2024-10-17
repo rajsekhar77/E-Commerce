@@ -15,7 +15,7 @@ import {
   editProduct,
   fetchAllProducts,
 } from "@/features/admin/products/productSlice";
-import { toast } from "@/hooks/use-toast";
+import { toast, useToast } from "@/hooks/use-toast";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductTile from "./ProductTile";
@@ -41,14 +41,26 @@ function AdminProducts() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [imageLoadingState, setImageLoadingState] = useState(false);
   const [currentEditedId, setCurrentEditedId] = useState(null);
+  const [triggerUpload, setTriggerUpload] = useState(false);
 
   const { productList } = useSelector((state) => state.AdminProducts);
 
   const dispatch = useDispatch();
+  const {toast} = useToast();
 
   function onSubmit(event) {
     event.preventDefault();
+    if(imgaeFile){
+      setTriggerUpload((prev) => !prev);
+    } else {
+      toast({
+        title: 'Please select image to procced',
+        variant: 'destructive'
+      })
+    }
+  }
 
+  function handleImageUploadSuccess() {
     if (currentEditedId !== null) {
       dispatch(
         editProduct({
@@ -89,12 +101,18 @@ function AdminProducts() {
     }
   }
 
-  function handleDelete(getCurrentProductId){
+  useEffect(() => {
+    if(uploadedImageUrl) {
+      handleImageUploadSuccess();
+    }
+  }, [uploadedImageUrl]);
+
+  function handleDelete(getCurrentProductId) {
     dispatch(deleteProduct(getCurrentProductId)).then((data) => {
-      if(data?.payload?.success){
+      if (data?.payload?.success) {
         dispatch(fetchAllProducts());
       }
-    })
+    });
   }
 
   function isFormValid() {
@@ -159,6 +177,7 @@ function AdminProducts() {
             setImageLoadingState={setImageLoadingState}
             imageLoadingState={imageLoadingState}
             isEditMode={currentEditedId !== null}
+            triggerUpload={triggerUpload}
           />
           <div className="py-6">
             <Commonform
