@@ -58,7 +58,7 @@ app.use("/api/admin/orders", AdminOrderRouter);
 app.use("/api/common/feature", commonFeatureRouter);
 
 app.get("/", (req, res) => {
-  res.send({ name: "raju" });
+  res.send("API is running");
 });
 
 app.listen(PORT, () => {
