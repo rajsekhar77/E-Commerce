@@ -20,19 +20,19 @@ import AdminOrderRouter from "./routes/admin/order-routes.js";
 import commonFeatureRouter from "./routes/common/feature-routes.js";
 
 dotenv.config();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT);
 
 const app = express();
 const corsOptions = {
   origin: process.env.CLIENT_BASE_URL,
-  methods: ["GET", "POST", "DELETE", "PUT", 'OPTIONS'],
+  methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
     "Authorization",
+    "Accept",
     "Cache-Control",
     "Expires",
-    "Pragma",
-    'Accept'
+    "Pragma"
   ],
   credentials: true
 };
