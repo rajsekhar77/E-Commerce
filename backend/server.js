@@ -25,7 +25,7 @@ const PORT = Number(process.env.PORT);
 const app = express();
 const corsOptions = {
   origin: process.env.CLIENT_BASE_URL,
-  methods: ["GET", "POST", "DELETE", "PUT"],
+  methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
     "Authorization",
@@ -40,7 +40,7 @@ app.use(
   cors(corsOptions)
 );
 
-app.options('*', corsOptions);
+app.options('*', cors(corsOptions));
 console.log(process.env.CLIENT_BASE_URL);
 
 app.use(express.json());
