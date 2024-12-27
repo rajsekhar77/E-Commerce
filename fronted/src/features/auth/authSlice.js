@@ -14,8 +14,8 @@ export const registerUser = createAsyncThunk(
   async (formData) => {
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/auth/signup`,
-      formData,
-      { withCredentials: true }
+      formData
+      // { withCredentials: true }
     );
     return response.data;
   }
@@ -24,8 +24,8 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
   const response = await axios.post(
     `${import.meta.env.VITE_API_URL}/api/auth/login`,
-    formData,
-    { withCredentials: true }
+    formData
+    // { withCredentials: true }
   );
   return response.data;
 });
@@ -47,13 +47,14 @@ export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
 export const checkAuth = createAsyncThunk("/auth/checkauth", async (token) => {
   const response = await axios.get(
     `${import.meta.env.VITE_API_URL}/api/auth/check-auth`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Cache-Control":
-          "no-store, no-cache, must-revalidate, proxy-revalidate",
-      },
-    }
+    // {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //     "Cache-Control":
+    //       "no-store, no-cache, must-revalidate, proxy-revalidate",
+    //   },
+    // }
+    { headers: { token } }
   );
   return response.data;
 });
@@ -62,9 +63,9 @@ export const logoutUser = createAsyncThunk("/auth/logout", async () => {
   const response = await axios.post(
     `${import.meta.env.VITE_API_URL}/api/auth/logout`,
     {},
-    {
-      withCredentials: true,
-    }
+    // {
+    //   withCredentials: true,
+    // }
   );
   return response.data;
 });
@@ -78,7 +79,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
       state.token = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -103,7 +104,7 @@ const authSlice = createSlice({
         state.user = action.payload.success ? action.payload.user : null;
         state.isAuthenticated = action.payload.success ? true : false;
         state.token = action.payload.token;
-        sessionStorage.setItem('token', JSON.stringify(action.payload.token))
+        sessionStorage.setItem("token", JSON.stringify(action.payload.token));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

@@ -131,8 +131,9 @@ export const logout = (req, res) => {
 // }
 
 export const middleware = async(req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]
+  // const authHeader = req.headers['authorization'];
+  // const token = authHeader && authHeader.split(' ')[1]
+  const {token} = req.headers;
   if(!token) {
     return res.status(401).json({
       success: false,

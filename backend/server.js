@@ -23,28 +23,9 @@ dotenv.config();
 const PORT = Number(process.env.PORT);
 
 const app = express();
-const corsOptions = {
-  origin: process.env.CLIENT_BASE_URL,
-  methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "Accept",
-    "Cache-Control",
-    "Expires",
-    "Pragma"
-  ],
-  credentials: true
-};
-app.use(
-  cors(corsOptions)
-);
-
-app.options('*', cors(corsOptions));
-console.log(process.env.CLIENT_BASE_URL);
-
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminRouter);
